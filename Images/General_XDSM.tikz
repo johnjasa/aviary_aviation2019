@@ -1,0 +1,61 @@
+
+%%% Preamble Requirements %%%
+% \usepackage{geometry}
+% \usepackage{amsfonts}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{sfmath}
+% \usepackage{tikz}
+
+% \usetikzlibrary{arrows,chains,positioning,scopes,shapes.geometric,shapes.misc,shadows}
+
+%%% End Preamble Requirements %%%
+
+\input{ /Users/eshendr1/packages/pyXDSM/pyxdsm/diagram_styles }
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+&
+\node [DataIO] (output_des) {$\begin{array}{c}\text{Discipline} \\ \text{Design Inputs}\end{array}$};&
+\node [DataIO] (output_miss) {$\begin{array}{c}\text{Mission Inputs}\end{array}$};&
+\\
+%Row 1
+\node [Optimization] (opt) {$\text{Optimizer}$};&
+\node [DataInter] (opt-des) {$\begin{array}{c}\text{Discipline} \\ \text{Design Variables}\end{array}$};&
+\node [DataInter] (opt-miss) {$\begin{array}{c}\text{Optimal Control} \\ \text{Variables}\end{array}$};&
+\\
+%Row 2
+\node [DataInter] (des-opt) {$\begin{array}{c}\text{Design Constraints}\end{array}$};&
+\node [ImplicitAnalysis,stack] (des) {$\begin{array}{c}\text{Discipline Design} \\ \text{Models}\end{array}$};&
+\node [DataInter] (des-miss) {$\begin{array}{c}\text{Discipline Design} \\ \text{Characteristics}\end{array}$};&
+\\
+%Row 3
+\node [DataInter] (miss-opt) {$\begin{array}{c}\text{Objective Function,} \\ \text{Operational Constraints}\end{array}$};&
+&
+\node [ImplicitAnalysis,stack] (miss) {$\begin{array}{c}\text{Mission Performance} \\ \text{Models}\end{array}$};&
+\\
+};
+
+% XDSM process chains
+
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(opt) edge [DataLine] (opt-des)
+(opt) edge [DataLine] (opt-miss)
+(des) edge [DataLine] (des-miss)
+(des) edge [DataLine] (des-opt)
+(miss) edge [DataLine] (miss-opt)
+% Vertical edges
+(opt-des) edge [DataLine] (des)
+(opt-miss) edge [DataLine] (miss)
+(des-miss) edge [DataLine] (miss)
+(des-opt) edge [DataLine] (opt)
+(miss-opt) edge [DataLine] (opt)
+(des) edge [DataLine] (output_des)
+(miss) edge [DataLine] (output_miss);
+\end{pgfonlayer}
+
+\end{tikzpicture}
