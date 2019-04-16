@@ -1,0 +1,29 @@
+% this file should contain the formal description of the tiltwing problem that will be optimized with the described MDAO environment
+
+This section will describe the application of the developed multidisciplinary optimization capability in the design of the turboelectric tiltwing aircraft.
+A formal description of the optimization problem will be presented which will include the objective function, design variables and constraints.
+
+
+% Revise this table based on the actual optimization completed
+\begin{table}[!htb]
+ \normalsize
+ \begin{center}
+  \caption{Optimization Problem Statement.}
+  \label{t:opt_statement}
+    \begin{tabular}{ r l l }
+        \hline 
+         & \textbf{Variable/Function} & \textbf{Description} \\ 
+        \hline 
+        minimize & $GTOW$ & Gross Takeoff Weight, lbm \vspace{1em} \\
+        with respect to & $10 < OPR < 20$ & Cycle overall pressure ratio \\
+         & $3000 < T_{\text{4}} < 3600$ & Combustor exit temperature, R \\
+         % & $2.5 < PR_{\text{LPC,TOC}} < 4.0$ & TOC LPC pressure ratio \\
+         % & $40 < OPR_{\text{TOC}} < 70$ & TOC overall pressure ratio \\
+         % & $0.5 < T_{\text{ratio}} < 0.95$ & Throttle ratio ($\frac{T_{\text{4,TOC}}}{T_{\text{4,RTO}}}$) \\
+         % & $1.35 < V_{\text{ratio,CRZ}} < 1.45$ & CRZ jet velocity ratio ($\frac{V_{\text{jet,core}} C_{v,\text{core}}}{V_{\text{jet,bypass}} C_{v,\text{bypass}}}$) \vspace{1em} \\
+        subject to & $V_{\text{min}} > 300$ & Minimum flight speed, mph\\
+         & $h_{\text{max}} < 15000$ & Maximum altitude, ft \\
+        \hline
+    \end{tabular}
+ \end{center}
+\end{table}

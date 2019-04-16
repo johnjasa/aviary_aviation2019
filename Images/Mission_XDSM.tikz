@@ -1,0 +1,234 @@
+
+%%% Preamble Requirements %%%
+% \usepackage{geometry}
+% \usepackage{amsfonts}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{sfmath}
+% \usepackage{tikz}
+
+% \usetikzlibrary{arrows,chains,positioning,scopes,shapes.geometric,shapes.misc,shadows}
+
+%%% End Preamble Requirements %%%
+
+\input{ /Users/eshendr1/packages/pyXDSM/pyxdsm/diagram_styles }
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+&
+&
+\node [DataIO] (output_prop_comp) {$\bar{X}_{propeller}$};&
+\node [DataIO] (output_e_comp) {$\begin{array}{c}\bar{X}_{electrical} \\ \bar{Y}_{electrical}\end{array}$};&
+\node [DataIO] (output_engine_comp) {$\begin{array}{c}\bar{X}_{turboshaft} \\ \bar{Y}_{turboshaft}\end{array}$};&
+&
+\node [DataIO] (output_aero_comp) {$\begin{array}{c}\bar{X}_{wing} \\ \bar{Y}_{wing}\end{array}$};&
+\node [DataIO] (output_flight_dynamics) {$w_{empty}$};&
+&
+\node [DataIO] (output_EOM_comp) {$\begin{array}{c}C_{D\_aircraft} \\ w_{empty}\end{array}$};&
+&
+\\
+%Row 1
+\node [Optimization] (DYMOS) {$\begin{array}{c}\text{DYMOS}\end{array}$};&
+\node [DataInter] (DYMOS-ambient) {$\begin{array}{c}h, V_{\infty}\end{array}$};&
+\node [DataInter] (DYMOS-prop_comp) {$V_{\infty}, T$};&
+&
+\node [DataInter] (DYMOS-engine_comp) {$h$};&
+&
+\node [DataInter] (DYMOS-aero_comp) {$V_{\infty}$};&
+\node [DataInter] (DYMOS-flight_dynamics) {$w_{fuel}, T$};&
+&
+\node [DataInter] (DYMOS-EOM_comp) {$h, V_{\infty}, V_{\infty}^*, w_{fuel}, T$};&
+&
+\node [DataIO] (right_output_DYMOS) {$r,h$};\\
+%Row 2
+&
+\node [Analysis] (ambient) {$\begin{array}{c}\text{Ambient}\end{array}$};&
+\node [DataInter] (ambient-prop_comp) {$\rho, \mu$};&
+&
+\node [DataInter] (ambient-engine_comp) {$MN$};&
+&
+\node [DataInter] (ambient-aero_comp) {$MN, \rho, \mu$};&
+&
+&
+\node [DataInter] (ambient-EOM_comp) {$\rho, \mu$};&
+&
+\\
+%Row 3
+&
+&
+\node [ImplicitAnalysis] (prop_comp) {$\begin{array}{c}\text{Propeller} \\ \text{(OpenBEMT)}\end{array}$};&
+\node [DataInter] (prop_comp-e_comp) {$P_{prop}, N$};&
+&
+&
+&
+&
+&
+&
+&
+\node [DataIO] (right_output_prop_comp) {$P_{prop,max}$};\\
+%Row 4
+&
+&
+&
+\node [ImplicitAnalysis] (e_comp) {$\begin{array}{c}\text{Electrical} \\ \text{(Zappy)}\end{array}$};&
+\node [DataInter] (e_comp-engine_comp) {$P_{shaft}, N$};&
+&
+&
+&
+&
+&
+&
+\\
+%Row 5
+\node [DataInter] (engine_comp-DYMOS) {$w_{fuel}^*$};&
+&
+&
+&
+\node [ImplicitAnalysis] (engine_comp) {$\begin{array}{c}\text{Turboshaft} \\ \text{(pyCycle)}\end{array}$};&
+&
+&
+&
+&
+&
+&
+\node [DataIO] (right_output_engine_comp) {$T_4$};\\
+%Row 6
+&
+&
+&
+&
+&
+\node [MDA] (solver) {$\begin{array}{c}\text{Solver}\end{array}$};&
+\node [DataInter] (solver-aero_comp) {$\alpha$};&
+\node [DataInter] (solver-flight_dynamics) {$\alpha$};&
+&
+&
+&
+\\
+%Row 7
+&
+&
+&
+&
+&
+&
+\node [ImplicitAnalysis] (aero_comp) {$\begin{array}{c}\text{Wing Aerodynamics} \\ \text{(OpenAeroStruct)}\end{array}$};&
+\node [DataInter] (aero_comp-flight_dynamics) {$L_{wing}$};&
+&
+\node [DataInter] (aero_comp-EOM_comp) {$D_{wing}$};&
+&
+\\
+%Row 8
+&
+&
+&
+&
+&
+&
+&
+\node [Analysis] (flight_dynamics) {$\begin{array}{c}\text{Flight Dynamics}\end{array}$};&
+\node [DataInter] (flight_dynamics-balance) {$\alpha_{LHS}, \alpha_{RHS}$};&
+&
+&
+\\
+%Row 9
+&
+&
+&
+&
+&
+\node [DataInter] (balance-solver) {$\mathcal{R} \alpha$};&
+&
+&
+\node [ImplicitAnalysis] (balance) {$\begin{array}{c}\text{Balance}\end{array}$};&
+&
+&
+\\
+%Row 10
+\node [DataInter] (EOM_comp-DYMOS) {$h^*, r^*$};&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [Analysis] (EOM_comp) {$\begin{array}{c}\text{State Rates}\end{array}$};&
+&
+\\
+%Row 11
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+};
+
+% XDSM process chains
+
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(DYMOS) edge [DataLine] (DYMOS-ambient)
+(DYMOS) edge [DataLine] (DYMOS-prop_comp)
+(DYMOS) edge [DataLine] (DYMOS-aero_comp)
+(DYMOS) edge [DataLine] (DYMOS-flight_dynamics)
+(DYMOS) edge [DataLine] (DYMOS-engine_comp)
+(DYMOS) edge [DataLine] (DYMOS-EOM_comp)
+(ambient) edge [DataLine] (ambient-prop_comp)
+(ambient) edge [DataLine] (ambient-aero_comp)
+(ambient) edge [DataLine] (ambient-EOM_comp)
+(ambient) edge [DataLine] (ambient-engine_comp)
+(prop_comp) edge [DataLine] (prop_comp-e_comp)
+(solver) edge [DataLine] (solver-aero_comp)
+(solver) edge [DataLine] (solver-flight_dynamics)
+(aero_comp) edge [DataLine] (aero_comp-flight_dynamics)
+(aero_comp) edge [DataLine] (aero_comp-EOM_comp)
+(flight_dynamics) edge [DataLine] (flight_dynamics-balance)
+(balance) edge [DataLine] (balance-solver)
+(engine_comp) edge [DataLine] (engine_comp-DYMOS)
+(e_comp) edge [DataLine] (e_comp-engine_comp)
+(EOM_comp) edge [DataLine] (EOM_comp-DYMOS)
+(DYMOS) edge [DataLine] (right_output_DYMOS)
+(prop_comp) edge [DataLine] (right_output_prop_comp)
+(engine_comp) edge [DataLine] (right_output_engine_comp)
+% Vertical edges
+(DYMOS-ambient) edge [DataLine] (ambient)
+(DYMOS-prop_comp) edge [DataLine] (prop_comp)
+(DYMOS-aero_comp) edge [DataLine] (aero_comp)
+(DYMOS-flight_dynamics) edge [DataLine] (flight_dynamics)
+(DYMOS-engine_comp) edge [DataLine] (engine_comp)
+(DYMOS-EOM_comp) edge [DataLine] (EOM_comp)
+(ambient-prop_comp) edge [DataLine] (prop_comp)
+(ambient-aero_comp) edge [DataLine] (aero_comp)
+(ambient-EOM_comp) edge [DataLine] (EOM_comp)
+(ambient-engine_comp) edge [DataLine] (engine_comp)
+(prop_comp-e_comp) edge [DataLine] (e_comp)
+(solver-aero_comp) edge [DataLine] (aero_comp)
+(solver-flight_dynamics) edge [DataLine] (flight_dynamics)
+(aero_comp-flight_dynamics) edge [DataLine] (flight_dynamics)
+(aero_comp-EOM_comp) edge [DataLine] (EOM_comp)
+(flight_dynamics-balance) edge [DataLine] (balance)
+(balance-solver) edge [DataLine] (solver)
+(engine_comp-DYMOS) edge [DataLine] (DYMOS)
+(e_comp-engine_comp) edge [DataLine] (engine_comp)
+(EOM_comp-DYMOS) edge [DataLine] (DYMOS)
+(prop_comp) edge [DataLine] (output_prop_comp)
+(e_comp) edge [DataLine] (output_e_comp)
+(engine_comp) edge [DataLine] (output_engine_comp)
+(aero_comp) edge [DataLine] (output_aero_comp)
+(flight_dynamics) edge [DataLine] (output_flight_dynamics)
+(EOM_comp) edge [DataLine] (output_EOM_comp);
+\end{pgfonlayer}
+
+\end{tikzpicture}

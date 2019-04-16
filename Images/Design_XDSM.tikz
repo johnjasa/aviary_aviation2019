@@ -1,0 +1,224 @@
+
+%%% Preamble Requirements %%%
+% \usepackage{geometry}
+% \usepackage{amsfonts}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{sfmath}
+% \usepackage{tikz}
+
+% \usetikzlibrary{arrows,chains,positioning,scopes,shapes.geometric,shapes.misc,shadows}
+
+%%% End Preamble Requirements %%%
+
+\input{ /Users/eshendr1/packages/pyXDSM/pyxdsm/diagram_styles }
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+&
+&
+&
+\node [DataIO] (output_prop_comp) {$\bar{X}_{propeller}$};&
+\node [DataIO] (output_e_comp) {$\bar{X}_{electrical}$};&
+\node [DataIO] (output_engine_comp) {$\bar{X}_{turboshaft}$};&
+&
+\node [DataIO] (output_aero_comp) {$\bar{X}_{wing}$};&
+\node [DataIO] (output_aircraft_mass) {$\begin{array}{c}\bar{X}_{aircraft} \\ m_{fuel}\end{array}$};&
+&
+&
+\\
+%Row 1
+\node [MDA] (solver) {$\begin{array}{c}\text{Solver}\end{array}$};&
+\node [DataInter] (solver-thrust_comp) {$\begin{array}{c}m_{total}^*\end{array}$};&
+&
+&
+&
+&
+&
+\node [DataInter] (solver-aero_comp) {$\begin{array}{c}m_{total}^*\end{array}$};&
+&
+\node [DataInter] (solver-balance) {$\begin{array}{c}m_{total}^*\end{array}$};&
+&
+\\
+%Row 2
+&
+\node [Analysis] (thrust_comp) {$\begin{array}{c}\text{Thrust} \\ \text{Required}\end{array}$};&
+&
+\node [DataInter] (thrust_comp-prop_comp) {$\begin{array}{c}T\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+\\
+%Row 3
+&
+&
+\node [Analysis] (eng_ambient) {$\begin{array}{c}\text{Propulsion} \\ \text{Ambient}\end{array}$};&
+\node [DataInter] (eng_ambient-prop_comp) {$\begin{array}{c}FC\end{array}$};&
+&
+\node [DataInter] (eng_ambient-engine_comp) {$\begin{array}{c}FC\end{array}$};&
+&
+&
+&
+&
+&
+\\
+%Row 4
+&
+&
+&
+\node [ImplicitAnalysis] (prop_comp) {$\begin{array}{c}\text{Propeller} \\ \text{(OpenBEMT)}\end{array}$};&
+\node [DataInter] (prop_comp-e_comp) {$\begin{array}{c}P_{propeller}\end{array}$};&
+&
+&
+&
+\node [DataInter] (prop_comp-aircraft_mass) {$\begin{array}{c}m_{propeller}\end{array}$};&
+&
+&
+\\
+%Row 5
+&
+&
+&
+&
+\node [ImplicitAnalysis] (e_comp) {$\begin{array}{c}\text{Electrical} \\ \text{(Zappy)}\end{array}$};&
+\node [DataInter] (e_comp-engine_comp) {$\begin{array}{c}P_{generator}\end{array}$};&
+&
+&
+\node [DataInter] (e_comp-aircraft_mass) {$\begin{array}{c}m_{electrical}\end{array}$};&
+&
+&
+\node [DataIO] (right_output_e_comp) {$\bar{Y}_{electrical}$};\\
+%Row 6
+&
+&
+&
+&
+&
+\node [ImplicitAnalysis] (engine_comp) {$\begin{array}{c}\text{Turboshaft} \\ \text{(pyCycle)}\end{array}$};&
+&
+&
+\node [DataInter] (engine_comp-aircraft_mass) {$\begin{array}{c}m_{turboshaft}\end{array}$};&
+&
+&
+\node [DataIO] (right_output_engine_comp) {$\bar{Y}_{turboshaft}$};\\
+%Row 7
+&
+&
+&
+&
+&
+&
+\node [Analysis] (wing_ambient) {$\begin{array}{c}\text{Wing} \\ \text{Ambient}\end{array}$};&
+\node [DataInter] (wing_ambient-aero_comp) {$\begin{array}{c}FC\end{array}$};&
+&
+&
+&
+\\
+%Row 8
+&
+&
+&
+&
+&
+&
+&
+\node [ImplicitAnalysis] (aero_comp) {$\begin{array}{c}\text{Wing Aerodynamics/} \\ \text{Structures} \\ \text{(OpenAeroStruct)}\end{array}$};&
+\node [DataInter] (aero_comp-aircraft_mass) {$\begin{array}{c}m_{wing}\end{array}$};&
+&
+&
+\node [DataIO] (right_output_aero_comp) {$\begin{array}{c}\bar{Y}_{wing}\end{array}$};\\
+%Row 9
+&
+&
+&
+&
+&
+&
+&
+&
+\node [Analysis] (aircraft_mass) {$\begin{array}{c}\text{Aircraft Mass}\end{array}$};&
+\node [DataInter] (aircraft_mass-balance) {$\begin{array}{c}m_{total}\end{array}$};&
+&
+\node [DataIO] (right_output_aircraft_mass) {$\begin{array}{c}m_{total}\end{array}$};\\
+%Row 10
+\node [DataInter] (balance-solver) {$\begin{array}{c}m_{total} = m_{total}^*\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [ImplicitAnalysis] (balance) {$\begin{array}{c}\text{Balance}\end{array}$};&
+&
+\\
+%Row 11
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+};
+
+% XDSM process chains
+
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(eng_ambient) edge [DataLine] (eng_ambient-prop_comp)
+(eng_ambient) edge [DataLine] (eng_ambient-engine_comp)
+(thrust_comp) edge [DataLine] (thrust_comp-prop_comp)
+(prop_comp) edge [DataLine] (prop_comp-e_comp)
+(e_comp) edge [DataLine] (e_comp-engine_comp)
+(prop_comp) edge [DataLine] (prop_comp-aircraft_mass)
+(e_comp) edge [DataLine] (e_comp-aircraft_mass)
+(engine_comp) edge [DataLine] (engine_comp-aircraft_mass)
+(wing_ambient) edge [DataLine] (wing_ambient-aero_comp)
+(aero_comp) edge [DataLine] (aero_comp-aircraft_mass)
+(solver) edge [DataLine] (solver-thrust_comp)
+(solver) edge [DataLine] (solver-aero_comp)
+(solver) edge [DataLine] (solver-balance)
+(aircraft_mass) edge [DataLine] (aircraft_mass-balance)
+(balance) edge [DataLine] (balance-solver)
+(e_comp) edge [DataLine] (right_output_e_comp)
+(engine_comp) edge [DataLine] (right_output_engine_comp)
+(aero_comp) edge [DataLine] (right_output_aero_comp)
+(aircraft_mass) edge [DataLine] (right_output_aircraft_mass)
+% Vertical edges
+(eng_ambient-prop_comp) edge [DataLine] (prop_comp)
+(eng_ambient-engine_comp) edge [DataLine] (engine_comp)
+(thrust_comp-prop_comp) edge [DataLine] (prop_comp)
+(prop_comp-e_comp) edge [DataLine] (e_comp)
+(e_comp-engine_comp) edge [DataLine] (engine_comp)
+(prop_comp-aircraft_mass) edge [DataLine] (aircraft_mass)
+(e_comp-aircraft_mass) edge [DataLine] (aircraft_mass)
+(engine_comp-aircraft_mass) edge [DataLine] (aircraft_mass)
+(wing_ambient-aero_comp) edge [DataLine] (aero_comp)
+(aero_comp-aircraft_mass) edge [DataLine] (aircraft_mass)
+(solver-thrust_comp) edge [DataLine] (thrust_comp)
+(solver-aero_comp) edge [DataLine] (aero_comp)
+(solver-balance) edge [DataLine] (balance)
+(aircraft_mass-balance) edge [DataLine] (balance)
+(balance-solver) edge [DataLine] (solver)
+(prop_comp) edge [DataLine] (output_prop_comp)
+(e_comp) edge [DataLine] (output_e_comp)
+(engine_comp) edge [DataLine] (output_engine_comp)
+(aero_comp) edge [DataLine] (output_aero_comp)
+(aircraft_mass) edge [DataLine] (output_aircraft_mass);
+\end{pgfonlayer}
+
+\end{tikzpicture}
