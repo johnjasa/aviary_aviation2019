@@ -1,1 +1,44 @@
 % This file should contain a short summary of the structures/mass analysis tool and models
+
+
+Mass estimates are broken down and calculated in the following categories,
+listed here by weight in descending order
+
+\begin{itemize}
+
+    \item engine  2055.6 lbs
+    \item fuselage 1129.2 lbs
+    \item wing 821.8 lbs
+    \item motor 810.2 lbs
+    \item drive system 715 lbs
+        \begin{itemize}
+            \item gearbox
+        \end{itemize}
+    \item fuel system 689.7 lbs
+        \begin{itemize}
+            \item battery
+        \end{itemize}
+    \item propellers 502.6 lbs
+    \item landing gear 477.4 lbs
+    \item cables 300 lbs
+    \item tail 110.9 lbs
+    \item inverter 75lbs
+\end{itemize}
+
+Engine weight was calculated based on a regression sensitive to massflow.
+Drive system weight includes gearbox, rotor break, and shaft. It is derived from NDARC AFDD83 regresion based on 30 aircraft.
+Fuel system weight includes tanks and supporting structures, and is based on a 15 aircraft regression.
+Fuselage is based on AFDD84 NDARC universal body weight model.
+Inverter weight is based on a linear regression of XX flightweight inverters.
+Motor weight is based on a linear regression of XX aircraft developmental motors.
+Landing gear and alighting structures are based on a regression of 28 aircraft.
+Propeller weight is based on the NDARC AFDD82 model using 35 aircraft to determine hub and blade weights
+Tail weight is the AFDD82 NDARC model, consistening of horizontal, vertical and tail rotor components.
+Wing weight comes from OpenAeroStruct (Jasa)
+Battery weight is dependent on energy capacity and energy density.
+Cable weight was calculated based on a regression sensitive to current.
+
+\cite{NDARC}
+
+% bibtex
+
