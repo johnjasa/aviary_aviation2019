@@ -35,27 +35,51 @@
 
   \tikzstyle{rotor}=[draw, rectangle, minimum height=1cm, minimum width=1.7cm]
   \tikzstyle{elec}=[draw, rectangle, red, minimum height=1cm, minimum width=1.7cm]
-  \tikzstyle{cycle}=[draw, rectangle, blue, minimum height=1cm, minimum width=1.7cm]
+  \tikzstyle{cycle}=[draw, rectangle, blue, minimum height=1cm, minimum width=1.7cm, text width=1.5cm]
 
   
-  \node[rotor] (r1) at (0,0) {Rotor 1};
-  \node[rotor] (r2) at (2,0) {Rotor 2};
-  \node[rotor] (r3) at (4,0) {Rotor 3};
-  \node[rotor] (r4) at (6,0) {Rotor 4};
+  % \node[rotor] (r1) at (0,0) {Rotor 1};
+  % \node[rotor] (r2) at (2,0) {Rotor 2};
+  % \node[rotor] (r3) at (4,0) {Rotor 3};
+  % \node[rotor] (r4) at (6,0) {Rotor 4};
 
-  \node[elec] (m1) at (0,-1.5) {Motor 1};
-  \node[elec] (m2) at (2,-1.5) {Motor 2};
-  \node[elec] (m3) at (4,-1.5) {Motor 3};
-  \node[elec] (m4) at (6,-1.5) {Motor 4};
+  % \node[elec] (m1) at (0,-1.5) {Motor 1};
+  % \node[elec] (m2) at (2,-1.5) {Motor 2};
+  % \node[elec] (m3) at (4,-1.5) {Motor 3};
+  % \node[elec] (m4) at (6,-1.5) {Motor 4};
 
-  \node[elec] (gen) at (3,-4.5) {Generator};
+  % \node[elec] (gen) at (3,-4.5) {Generator};
 
-  \node[cycle] (comp) at (3,-5.5) {Compressor};
-  \node[cycle] (burn) at (3,-6.5) {Burner};
-  \node[cycle] (turb) at (3,-7.5) {Turbine};
-  \node[cycle] (pt) at (3,-8.5) {Power Turbine};
-  \node[cycle] (nozz) at (3,-9.5) {Nozzle};
-  \node[cycle] (shaft) at (5,-6.5) {Shaft};
+  % \node[cycle] (comp) at (3,-5.5) {Compressor};
+  % \node[cycle] (burn) at (3,-6.5) {Burner};
+  % \node[cycle] (turb) at (3,-7.5) {Turbine};
+  % \node[cycle] (pt) at (3,-8.5) {Power Turbine};
+  % \node[cycle] (nozz) at (3,-9.5) {Nozzle};
+  % \node[cycle] (shaft) at (5,-6.5) {Shaft};
+
+
+
+  \node[rotor] (r1) at (0,2.0) {Rotor 1};
+  \node[rotor] (r2) at (0,0.75) {Rotor 2};
+  \node[rotor] (r3) at (0,-0.75) {Rotor 3};
+  \node[rotor] (r4) at (0,-2.0) {Rotor 4};
+
+  \node[elec] (m1) at (2,2.0) {Motor 1};
+  \node[elec] (m2) at (2,0.75) {Motor 2};
+  \node[elec] (m3) at (2,-0.75) {Motor 3};
+  \node[elec] (m4) at (2,-2.0) {Motor 4};
+
+  \node[elec] (gen) at (6,1.0) {Generator};
+
+  \node[cycle] (inlet) at (6,-1.0) {Inlet};
+  \node[cycle] (comp) at (8,-1.0) {Compr-essor};
+  \node[cycle] (burn) at (10,-1.0) {Burner};
+  \node[cycle] (turb) at (12,-1.0) {Turbine};
+  \node[cycle] (pt) at (14,-1.0) {Power Turbine};
+  \node[cycle] (nozz) at (16,-1.0) {Nozzle};
+  \node[cycle] (shaft) at (10,0.25) {Shaft};
+  \node[cycle] (shaft) at (14,1.0) {Shaft};
+
 
   % \node[Minimum Width = loop, fill = yellow, below = of imp-sol] (rec-box)
   %   {rectangular box, and very wiiiiiiiiiiiiiiide\\2nd line};
