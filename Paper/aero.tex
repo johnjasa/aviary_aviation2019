@@ -2,39 +2,67 @@
 
 % Summarize the physics
 To model the aerostructural performance of the wing, we use OpenAeroStruct, which is an open-source tool for low-fidelity conceptual design of aircraft wings~\cite{Jasa2018a}.
-OpenAeroStruct uses a vortex lattice method coupled with a six degree-of-freedom finite element method to analyze the aerostructural properties of aircraft wings.
-These low-fidelity methods enable inexpensive exploration of the wing design space.
+OpenAeroStruct uses a vortex lattice method coupled with a six degree-of-freedom finite element model to analyze the aerostructural properties of aircraft wings.
+These low-fidelity physics-based methods enable inexpensive exploration of the wing design space.
 OpenAeroStruct can be used to investigate both conventional and non-conventional wings because the physics-based analyses do not rely on previously-gathered information from existing planes.
-Additionally, OpenAeroStruct provides analytic derivatives for all outputs of the aerostructural analyses, which enables low cost gradient-based optimization.
+Additionally, OpenAeroStruct provides analytic derivatives for all outputs of the aerostructural analyses, which enables low-cost gradient-based optimization.
 
 % Describe the model used by this tool that was developed for the tiltwing plane
-Here we use information from Johnson et al's paper, with these values specifically:
-Put in table of wing design values and assumptions used
-We use point masses for the engine and propellers, which was partially developed for this work
+We obtain most of the aerostructural wing properties from Johnson et al~\cite{johnson2018concept}.
+The relevant values used in this study are listed in Table~\ref{t:aerostruct_wing}.
+We use a NACA 0015 symmetric airfoil for the wingbox cross-section.
+The wingbox occupies the wing from 10\% to 70\% chord for the entire span.
+We include two point masses on each half-wing to account for the loading due to the engines and propellers.
+A three-view and isometric view of the aerostructural wing model are shown in Fig.~\ref{f:OAS_wing}.
 
-% Describe the inputs and outputs of the model and how it talks to other portions for both static and dynamic
-We do both static and dynamic analysis
-For static, we do a 3-point aerostructural analysis where we ensure that the wing won't fail
-We choose the conditions by doing V-n analysis (cite Raymer) to determine the limiting loads of the aircraft
-Include a V-n plot for a nominal flight condition
+% Revise this table based on the actual optimization completed
+\begin{table}[!htb]
+ \normalsize
+ \begin{center}
+  \caption{Aerostructural wing properties}
+  \label{t:aerostruct_wing}
+    \begin{tabular}{ r l l }
+        \hline
+        \textbf{Design parameter} & \textbf{Value} & \textbf{Units} \\
+        \hline
+        Wingspan & 52.50 & feet \\
+        Root chord & 4.56 & feet \\
+        Elastic modulus & 73.1 & GPa \\
+        Torsional modulus & 27.48 & GPa \\
+        Yield strength & 324 & MPa \\
+        Yield safety factor & 1.05 & -- \\
+        Wingbox material density & 2810 & $\text{kg}/\text{m}^3$ \\
+        \hline
+    \end{tabular}
+ \end{center}
+\end{table}
 
-In the dynamic analysis, we only use an aerodynamic-only analysis
-This is because the structural loads in the multipoint case are much more limiting
-Nominally, in a regular mission, we will not come close to the structural limit of the aircraft wings
-We pass the structural deformation from the 1g case to the aerodynamic cases in the dynamic analysis to get a realistically-deformed wing
-
-\begin{figure}
+\begin{figure}[h]
 \begin{center}
  \includegraphics[width=1.0\textwidth]{../Images/aerostruct_wing}
- \caption{Isometric view of the aerostructural wing model with the engine point masses shown in blue.}
+ \caption{Three-view and isometric view of the aerostructural wing model with the engine point masses shown in blue.}
  \label{f:OAS_wing}
 \end{center}
 \end{figure}
 
+We use this wing model in both the static and dynamic analyses.
+For static analysis, we do a 3-point aerostructural analysis to ensure that the internal structure of the wing does not fail during loading.
+We determine the limiting loading conditions by producing a \textit{V-n} diagram, which shows the aircraft limit load factor as a function of airspeed~\cite{Raymer2012}.
+This \textit{V-n} diagram is constructed using both the worst-case maneuver and gust loads to find the flight conditions where the wing structure is most likely to fail.
+The \textit{V-n} diagram produced for this wing and nominal flight conditions is shown in Fig.~\ref{f:v_n_diagram}.
+$V_S$ is the stall speed at normal level flight, $V_A$ is the corner speed, $V_B$ is the design speed for maximum gust intensity, $V_C$ is the design equivalent airspeed, $V_D$ is the design diving speed.
+We see that the most limiting loads are at 2.8g and -1g.
+Therefore, in the 3-point aerostructural analysis used in the static design, we use 1g, -1g, and 2.8g flight conditions.
+
 \begin{figure}
 \begin{center}
- \includegraphics[width=0.7\textwidth]{../Images/v_n_diagram}
- \caption{V-n diagram used to determine the limiting flight conditions for the wing structure.}
+ \includegraphics[width=0.6\textwidth]{../Images/v_n_diagram}
+ \caption{\textit{V-n} diagram used to determine the limiting flight conditions for the wing structure.}
  \label{f:v_n_diagram}
 \end{center}
 \end{figure}
+
+For the dynamic analyses, we only model the aerodynamic wing without considering the wingbox structure to lower the computational cost.
+The wing deflection obtained from the 1g aerostructural analysis is applied to the wing mesh used in the aero-only cases.
+Additionally, the change in results due to wing deflection across the cruise segment of the mission is negligible, which allows us to use only aerodynamic analyses in the dynamic portions of the problem.
+Nominally, we will not experience structurally limiting loads during the mission, so we push the structure to the limit in the static design analysis portion.
