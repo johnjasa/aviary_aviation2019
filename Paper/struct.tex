@@ -1,8 +1,25 @@
 % This file should contain a short summary of the structures/mass analysis tool and models
 
+In addition to the structural analysis completed for the wing, the disciplinary design phase includes additional calculations to estimate the overall mass of the aircraft.
+This estimation is broken down by major aircraft subsystem with empirical correlations used to approximated the weight for the subsystems.
+
+For the aircraft structure, empirical correlations were used following the method applied by NDARC\cite{NDARC}, which are often based on the U.S. Army Aeroflightdynamics Directorate (AFDD) preliminary design methods, with the exception of the wing weight which came from OpenAeroStruct.
+First, the fuselage mass was based on the AFDD84 NDARC universal body weight model.
+In addition, the tail weight was computed from the AFDD82 NDARC model and included the horizontal, vertical \textbf{and tail rotor components}.
+Fuel system weight includes tanks and supporting structures, and is based on a 15 aircraft regression.
+The landing gear and alighting structural masses were based on a regression of 28 aircraft.
+
+For the propulsion system related elements, the mass estimating equations came from a more diverse set of 
+The propeller weight was based on the NDARC AFDD82 model used 35 aircraft to empirically determine hub and blade weights. 
+Next, the drive system weight including gearbox, rotor break, and shaft was included and is based on the NDARC AFDD83 regression based on 30 aircraft.
+For the electric system, the motor, inverter, rectifier and generator weights are all estimated based on linear regressions of flightweight systems presently in development for aircraft systems.
+For the electric cabling, an empirical regression based on the maximum current was used, with the max current set by a worst-case failure where several cables are severed. 
+For the battery, the weight was estimated based on an assumed energy density and capacity of the battery, with 2 minutes of emergency hover power required.
+Finally, the turboshaft engine weight was approximated using a linear regression based on shaft power for existing turboshaft engines.
 
 Mass estimates are broken down and calculated in the following categories,
-listed here by weight in descending order
+listed here by weight in descending order.
+Convert this to a table??
 
 \begin{itemize}
 
@@ -25,19 +42,6 @@ listed here by weight in descending order
     \item inverter 75lbs
 \end{itemize}
 
-Engine weight was calculated based on a regression sensitive to massflow.
-Drive system weight includes gearbox, rotor break, and shaft. It is derived from NDARC AFDD83 regresion based on 30 aircraft.
-Fuel system weight includes tanks and supporting structures, and is based on a 15 aircraft regression.
-Fuselage is based on AFDD84 NDARC universal body weight model.
-Inverter weight is based on a linear regression of XX flightweight inverters.
-Motor weight is based on a linear regression of XX aircraft developmental motors.
-Landing gear and alighting structures are based on a regression of 28 aircraft.
-Propeller weight is based on the NDARC AFDD82 model using 35 aircraft to determine hub and blade weights
-Tail weight is the AFDD82 NDARC model, consistening of horizontal, vertical and tail rotor components.
-Wing weight comes from OpenAeroStruct (Jasa)
-Battery weight is dependent on energy capacity and energy density.
-Cable weight was calculated based on a regression sensitive to current.
 
-\cite{NDARC}
 
 % bibtex

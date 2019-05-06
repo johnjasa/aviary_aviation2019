@@ -59,28 +59,13 @@ pyCycle differs from other thermodynamic cycle analysis tools such as NPSS in th
 Modeling a gas turbine engine with pyCycle first necessitates that the designer specify the major engine components (i.e. compressor, combustor, turbine, etc.) as well as how these components are connected (both via in terms of flow and shafts).
 For each of these components, the user must also provide information about the performance characteristics of the components.
 In the disciplinary design phase, this commonly includes information such as the design point component efficiencies, pressure ratios, and performance maps.
-During this phase, this design information is used to size the gas turbine engine and compute a number of constants and map scalars which are passed to the model evaluated in the mission analysis phase.
-The
-
-
-Inputs: power demand, component efficiencies, pressure ratios, 
-outputs: engine performance, fuel flow rate, engine weight
-
+In addition, during the design phase the maximum hover power required must be given as an input.
+With this information, the gas turbine engine is sized during the design phase with the outputs being the engine mass as well as the flow areas and map scalars which are passed to the model evaluated in the mission analysis phase.
+For the mission analysis phase, the same model and connections are evaluated as the design phase with some minor variations in the calculations.  
+For this phase, the model again takes in the required shaft power needed by the generator and then determines the fuel flow rate subject to maximum temperature limits.
 
 For the tiltwing turboelectric concept under consideration in this paper, the pyCycle model developed is represented by the blue portion of Figure \ref{f:turboelectric} and is described in more detail in a paper by Chapman.\cite{chapman2018multi}
 In summary, the flowpath for the turboshaft engine in this study includes an inlet, compressor, burner, turbine, power turbine and nozzle. 
 Furthermore, the compressor and turbine are connected by a shaft with the power turbine connected to the generator by a separate shaft. 
-Not included in this simplified graphic are the more intricate details of the cycle model such as the turbine cooling.
-
-
-
-
-
-To model the gas turbine portions of the propulsion system, the recently developed thermodynamic cycle analysis tool pyCycle was selected.\cite{gray2017chemical,hearn2016optimization}
-PyCycle is a new analysis tool being developed at NASA Glenn Research Center within the OpenMDAO framework.
-While PyCycle is similar to other cycle analysis tools such as NPSS, its unique capability is that it provides analytic derivatives to better support gradient based solvers and optimizers.  
-% This capability is enabled by developing the analysis tool within the OpenMDAO framework and taking advantage of the unified derivative methodology. 
-pyCycle has been demonstrated in the context of a trajectory optimization in a previous research effort\cite{hendricks2017simultaneous} and the development of a turboshaft engine for the UAM turboelectric tiltwing aircraft will be published a this same conference.\cite{chapman2018multi}
-The engine components comprising the turboshaft model for the tiltwing aircraft are shown in blue in Figure \ref{f:turboelectric}.
-
-
+While not included in the simplified graphic of Figure \ref{f:turboelectric}, the model also includes calculations to compute the required turbine cooling flows as well as the effects of small compressor blade heights on compressor efficiency.
+For computing the weight of the engine in this study, a simple correlation was developed from historical data for turboshaft engines based on the overall airflow through the engine.
