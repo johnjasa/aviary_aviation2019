@@ -1,9 +1,0 @@
-% This file should contain a short summary of the trajectory analysis/optimal control tool and models
-
-To model the trajectory of the UAM concept vehicles under consideration, the analysis tool Dymos which is written in the OpenMDAO framework was selected.\cite{falck2019optimal}
-The primary capability provided by Dymos is a modular, general approach for determining optimal control schedules.
-The optimal control capability applies the Legendre-Gauss-Lobatto (LGL) collocation scheme which allows for analysis with relatively few function evaluations compared to other methods.\cite{falckpointer2016}
-This collocation scheme discretizes the mission into a number of segments within which a polynomial is used to specify the value of each control or  state parameter over time.
-The polynomials for each state equation are defined by a set of cardinal nodes which are varied to satisfy the equations of motion at interior nodes on the function.  
-By formulating the control problem in this way it can be solved with nonlinear programming approaches to determine the optimal control schedule.\cite{falckpointer2016}
-Dymos has been used to evaluate the trajectory of UAM concepts coupled with acoustic analyses\cite{falck2018multi}.
