@@ -1,0 +1,41 @@
+% this file should contain a summary of the propulsion system analysis tools and models including propeller, electric and cycle
+
+% Summary paragraph
+The trajectory is modeled as two two distinct forms of flight.
+The trajectory begins and ends with vertical ascent/descent phases which propagate the change in altitude and fuel mass subject to a commanded climb rate.
+The bulk of the trajectory is performed under a forward flight mode which is modeled using a steady-flight assumption, described below.
+Currently this work ignores the transition phase between vertical and forward flight modes.
+
+\subsubsection{Vertical Flight}
+
+In vertical flight, the trajectory of the aircraft is controlled by specifying the climb rate at any given time.
+In this analysis, the climb rate is assumed to be constant during the takeoff and landing phases.
+The dynamics during vertical flight are governed by momentum theory\cite{leishman2006principles}.
+The role of the vertical flight dynamics system is to determine the rotor thrust and rotor power required to achieve the prescribed rate of climb.
+
+The thrust required to attain a given climb rate is
+
+\begin{align}
+    T &= 2 \rho A_{rotor} (\dot{h} + v_h) v_h \label{eq:climb_thrust}
+\end{align}
+
+where the induced velocity in hover ($v_h$) is computed as
+
+\begin{align}
+    v_h &= \sqrt{\frac{T_{rotor}}{2 \rho A_{rotor}}} \label{eq:hover_induced_velocity}
+\end{align}
+
+This thrust is then passed to the propulsion model along with the rate of climb to compute the necessary shaft input power.
+
+\subsubsection{Forward Flight}
+
+Forward flight is modeled using a steady flight assumption originally posed by Bryson et al. whereby the flight path angle is assumed to be nearly zero\cite{bryson1969energystate}.
+
+\begin{align}
+    T \alpha + L(\alpha) = W \label{eq:forward_flight_balance}
+\end{align}
+
+A Newton solver is used to find the value of $\alpha$ which balances \eqref{eq:forward_flight_balance}.
+The total thrust ($T$) of the aircraft in forward-flight is imposed as control variable.
+The aircraft lift is provided by the aerodynamics model.
+Finally, the vehicle weight ($W$) is computed by summing of the masses of the constituent subsystems.
