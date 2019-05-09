@@ -18,14 +18,52 @@ Each of these three disciplinary models for the propulsion system are described 
 \end{figure}
 
 \subsubsection{Rotor/Propeller Analysis} %Dan
-This section needs a short summary of the propeller analysis in OpenBEMT
+% This section needs a short summary of the propeller analysis in OpenBEMT
+% \begin{itemize}
+%     \item Describe the analysis tool and summarize the physics captured by the tool
+%     \item Describe the inputs and outputs of the code
+%     \item Make sure to include both design/static information as well as ODE information as appropriate
+%     \item Reference previous publications on the tool
+%     \item Describe the model created using the tool for the tiltwing UAM vehicle (include graphic as needed)
+% \end{itemize}
+The propeller/rotor aerodynamics are predicted here using blade element momentum theory (BEMT).
+BEMT begins by dividing the blade spanwise into a finite number of radial stations, or ``blade elements.''
+Each blade element is treated as an independent airfoil with associated lift and drag curves.
+A control volume is then formed that encloses the propeller and the flow far upstream and downstream.
+By applying a momentum balance to this control volume, and including the interaction between the fluid and blade elements, the velocity induced by the propeller in the axial and circumferential directions can be predicted.
+The induced velocities can then be used to calculate desired propeller performance metrics, such as the necessary input power, the net torque and thrust, and propeller efficiency.
+
+The BEMT implementation used here is OpenBEMT, first described by Hwang and Ning\cite{hwang_optimization_of_electric_aircraft_odm_2018}.
+In OpenBEMT, information from an airfoil database (\url{www.airfoiltools.com}) is extended past stall using the Viterna method\cite{viterna_theoretical_and_exp_power_from_large_horizontal_wind_turbines_1982} and minimal-energy tensor-product splines as implemented in the Surrogate Modeling Toolbox\cite{hwang_fast_prediction_surrogate_model_2018}.
+The code also uses a modification to traditional BEMT that reduces the method to the solution of a single implicit equation\cite{ning_simple_solution_to_bemt_equations_2013}.
+OpenBEMT was first used in~\cite{hwang_optimization_of_electric_aircraft_odm_2018} as one component of a large-scale optimization of NASA's X-57 Maxwell concept vehicle, and later\cite{ingraham_gradient_based_prop_opt_acoustic_constraints_2019} was combined with NASA Langley's second-generation Aircraft Noise Prediction Program\cite{lopes_design_of_anopp2_2011,lopes2016anopp2} (ANOPP2) to perform propeller aerodynamic-acoustic optimizations.
+
+In the optimization described in this work, OpenBEMT is used to predict the performance of the tiltwing concept vehicle's four propellers.
+One OpenBEMT calculation is performed for the four propellers---the thrust produced and input power calculated by the tool are multiplied by four to obtain the total values.
+The OpenBEMT inputs relevant to this work are the following
 \begin{itemize}
-    \item Describe the analysis tool and summarize the physics captured by the tool
-    \item Describe the inputs and outputs of the code
-    \item Make sure to include both design/static information as well as ODE information as appropriate
-    \item Reference previous publications on the tool
-    \item Describe the model created using the tool for the tiltwing UAM vehicle (include graphic as needed)
+  \item inflow velocity
+  \item chord and twist profiles along the blades
+  \item blade inner and outer diameters
+  \item rotational rate
+  \item blade pitch  % Only if switched on---take this out if we don't use it
 \end{itemize}
+OpenBEMT can calculate many different propeller performance metrics---the two primary output quantities used here are the thrust and input power.
+The thrust is connect to the flight dynamics ODE provided by Dymos, and the propeller input power is passed to Zappy's electrical system analysis, described below.
+
+In the static portion of the optimization, OpenBEMT is used to calculate optimal chord and twist distributions.
+The inflow velocity is set to a value of 2 meters/second, corresponding to a vertical takeoff condition.
+The blade inner diameter is fixed at 30 centimeters, and the outer diameter is set so that each pair of propellers covers the entire wing span.
+The rotational rate is calculated implicitly by finding the value necessary to provide the thrust demanded by the Dymos flight dynamics.
+Since the static analysis is meant to mimic the vertical takeoff portion of flight, the thrust is set to the total weight of the vehicle.
+The blade pitch in the static analysis is fixed at zero degrees.
+
+In the dynamic portion of the optimization, the blade geometry parameters are, of course, fixed throughout the trajectory.
+The vehicle's velocity, calculated by Dymos, is used as OpenBEMT's inflow velocity, without taking into account the vehicle's angle of attack, a decision that is justified under the assumption that the angle of attack will be low throughout the trajectory.
+Like in the static analysis, the propeller's rotational rate is calculated implicitly by finding the value gives the total thrust value demanded by Dymos.
+Unlike the static analysis, the blade pitch is not constant, and instead is provided to Dymos as a dynamic control.  % Not true if OBEMT_PITCH_CONTROL is False.
+
+% TODO: what's going on in the landing phase?
 
 \subsubsection{Electrical System Analysis} %Eric
 To model the electrical components of the propulsion system, a new power systems modeling tool called Zappy was developed on top of the OpenMDAO framework.  
