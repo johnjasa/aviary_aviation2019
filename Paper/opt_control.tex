@@ -1,0 +1,8 @@
+In this study the authors utilized the Dymos optimal control software to optimize the trajectory of the vehicle\cite{falck2019optimal}.
+Dymos decomposes a single flight trajectory into one or more \emph{phases}, and in each of those phases it transcribes the optimal control problem using a pseudospectral or Runge-Kutta transcription.
+For this work, a single flight is modeled as three phases:  a vertical takeoff phase, a forward flight phase, and a vertical landing phase.
+Since this model involves analyses which are computationally expensive (particularly OpenAerostruct and pyCycle), the authors chose to use the Radau pseudospectral transcription in Dymos.
+The Dymos implementation of the high-order Gauss-Lobatto method is a two stage process requiring two (vectorized) evaluations of the ODE system in each iteration.
+Although the Radau method requires evaluation at more points for the same accuracy, it can outperform Gauss-Lobatto in situations where the ODE call overhead is significant.
+Furthermore, unlike the high-order Gauss-Lobatto transcription, the Radau transcription does not require interpolation of the solution.
+The interpolation of an erroneous initial guess onto the collocation grid can lead to inaccurate iterates and convergence issues for those portions of the model which rely on the convergence of implicit systems.
